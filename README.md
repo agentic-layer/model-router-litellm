@@ -10,7 +10,7 @@ meant to route between different LLM providers, such as OpenAI or Gemini.
 docker build -t agentic-layer/model-router-litellm .
 
 # Run the container with required environment variables
-docker run -p 10000:10000 -e OPENAI_API_KEY=your_key_here agentic-layer/model-router-litellm
+docker run -p 4000:4000 -e OPENAI_API_KEY=your_key_here agentic-layer/model-router-litellm
 ```
 
 ## Deployment
@@ -22,8 +22,9 @@ kubectl create secret generic openai-api-key --from-literal=OPENAI_API_KEY=$OPEN
 kubectl apply -k kustomize/local/
 
 # to test the proxy, issue the following curl command
-curl http://litellm.127.0.0.1.sslip.io/v1/chat/completions \
+curl http://litellm.127.0.0.1.sslip.io/chat/completions \
   -H "Content-Type: application/json" \
+  -H 'Authorization: Bearer sk-1234' \
   -d '{
      "model": "gpt-4o-mini",
      "messages": [{"role": "user", "content": "Say this is a test!"}],

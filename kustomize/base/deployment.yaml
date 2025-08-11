@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-router-litellm
+  namespace: default
+  labels:
+    app: model-router-litellm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-router-litellm
+  template:
+    metadata:
+      labels:
+        app: model-router-litellm
+    spec:
+      containers:
+      - name: litellm
+        image: ghcr.io/berriai/litellm
+        args:
+          - "--port"
+          - "4000"
+          - "--config"
+          - "/app/config.yaml"
+        ports:
+        - name: http
+          containerPort: 4000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "2000m"  
+        livenessProbe:
+            httpGet:
+              path: /health/liveliness
+              port: 4000
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: 4000
+          initialDelaySeconds: 60
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 10
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config.yaml
+          subPath: litellm-config.yaml
+        envFrom:
+        - secretRef:
+            name: openai-api-key
+      volumes:
+        - name: config-volume
+          configMap:
+            name: litellm-config

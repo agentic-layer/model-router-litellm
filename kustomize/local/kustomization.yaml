@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../base/
+- ingress.yaml
+
+configMapGenerator:
+- name: litellm-config
+  behavior: replace
+  files:
+  - litellm-config.yaml
+
+images:
+  - name: agentic-layer/model-router-litellm
+    newName: agentic-layer/model-router-litellm
+    newTag: latest
+  - name: ghcr.io/berriai/litellm
+    newName: ghcr.io/berriai/litellm
+    newTag: main-stable

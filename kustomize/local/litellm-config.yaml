@@ -1,0 +1,5 @@
+model_list:
+  - model_name: "*"             # all requests where model not in your config go to this deployment
+    litellm_params:
+      model: openai/*           # set `openai/` to use the openai route
+      api_key: os.environ/OPENAI_API_KEY
