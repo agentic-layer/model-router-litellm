@@ -9,3 +9,11 @@ configMapGenerator:
 - name: litellm-config
   files:
   - litellm-config.yaml
+
+images:
+  - name: agentic-layer/model-router-litellm
+    newName: agentic-layer/model-router-litellm
+    newTag: latest
+  - name: ghcr.io/berriai/litellm
+    newName: ghcr.io/berriai/litellm
+    newTag: main-stable

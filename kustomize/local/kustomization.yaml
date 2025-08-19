@@ -11,6 +11,14 @@ configMapGenerator:
   files:
   - litellm-config.yaml
 
+patches:
+ - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: model-router-litellm
+   path: image-patch.yaml
+
 images:
   - name: agentic-layer/model-router-litellm
     newName: agentic-layer/model-router-litellm
